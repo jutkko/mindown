@@ -27,7 +27,7 @@ func main() {
 			panic(err.Error())
 		}
 
-		err = input.ParseOmpl(file).Export()
+		err = input.ParseOpml(file).Export()
 
 		if err != nil {
 			panic(err.Error())

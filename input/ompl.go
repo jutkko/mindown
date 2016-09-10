@@ -8,7 +8,7 @@ import (
 	"github.com/jutkko/mindown/util"
 )
 
-func ParseOmpl(f *os.File) *util.Graph {
+func ParseOpml(f *os.File) *util.Graph {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
