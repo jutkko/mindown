@@ -22,12 +22,12 @@ func main() {
 
 	app.Action = func(c *cli.Context) error {
 		fmt.Printf("Input file name: %s\n", c.String("input-file"))
-		file, err := os.Open(c.String("input-file"))
+		graph, err := input.ParseOpml(c.String("input-file"))
 		if err != nil {
 			panic(err.Error())
 		}
 
-		err = input.ParseOpml(file).Export()
+		err = graph.Export()
 
 		if err != nil {
 			panic(err.Error())
