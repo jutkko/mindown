@@ -4,11 +4,6 @@ go:
     - 1.7
     - tip
 
-install:
-  # Add Godeps dependencies to GOPATH
-  - export GOPATH="${TRAVIS_BUILD_DIR}/vendor:$GOPATH"
-  - go install github.com/onsi/ginkgo/ginkgo
-
 script:
     - go vet
     - ginkgo -r
