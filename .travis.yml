@@ -6,6 +6,7 @@ go:
 
 install:
   - go get -v -t ./...
+  - go get github.com/onsi/gomega
   - go install github.com/onsi/ginkgo/ginkgo
 
 script:
