@@ -4,6 +4,10 @@ go:
     - 1.7
     - tip
 
+install:
+  - go get -v -t ./...
+  - go install github.com/onsi/ginkgo/ginkgo
+
 script:
-    - go vet ./...
+    - go vet
     - ginkgo -r
