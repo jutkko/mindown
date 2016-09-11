@@ -8,9 +8,16 @@ import (
 )
 
 func ParseOpml(filename string) (*util.Graph, error) {
-	doc, _ := opml.NewOPMLFromFile(filename)
-	xml, _ := doc.XML()
-	fmt.Printf(xml)
+	doc, err := opml.NewOPMLFromFile(filename)
+	if err != nil {
+		return nil, err
+	}
 
+	xml, err := doc.XML()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf(xml)
 	return nil, nil
 }
