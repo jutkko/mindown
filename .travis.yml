@@ -5,8 +5,8 @@ go:
     - tip
 
 install:
-  - go get -v -t ./...
-  - go get github.com/onsi/gomega
+  # Add Godeps dependencies to GOPATH
+  - export GOPATH="${TRAVIS_BUILD_DIR}/vendor:$GOPATH"
   - go install github.com/onsi/ginkgo/ginkgo
 
 script:
