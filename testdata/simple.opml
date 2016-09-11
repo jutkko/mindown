@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>Vim-notes</title>
+  </head>
+  <body>
+    <outline text="Vim-notes">
+    </outline>
+  </body>
+</opml>
