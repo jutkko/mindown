@@ -4,6 +4,11 @@ go:
     - 1.7
     - tip
 
+install:
+  - go get github.com/tools/godep
+  - godep restore
+  - go install github.com/onsi/ginkgo/ginkgo
+
 script:
     - go vet
     - ginkgo -r
