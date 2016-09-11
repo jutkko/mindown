@@ -7,6 +7,11 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/gilliek/go-opml/opml",
+			"Comment": "v1.0.0-4-g279548d",
+			"Rev": "279548d83dbbcf188d8848fb660b1df56145c66a"
+		},
+		{
 			"ImportPath": "github.com/onsi/ginkgo",
 			"Comment": "v1.2.0-71-g7b6efc7",
 			"Rev": "7b6efc7d7b052568b49ac02d3141c9d7a5a494a4"
