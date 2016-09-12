@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>Vim-notes</title>
+  </head>
+  <body>
+    <outline text="Vim-notes">
+      <outline text="Intro">
+        <outline text="To vim"></outline>
+        <outline text="To reading the manual" _note="Test note">
+          <outline text="User manual"></outline>
+          <outline text="How to use the manuals">
+            <outline text="Navigate" _status="unchecked"></outline>
+            <outline text="Search" _status="unchecked"></outline>
+          </outline>
+        </outline>
+      </outline>
+      <outline text="Motion"><outline text="Basic"></outline>
+        <outline text="Reference manual"></outline>
+      </outline>
+    </outline>
+  </body>
+</opml>
