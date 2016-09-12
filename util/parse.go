@@ -25,7 +25,10 @@ type Graph struct {
 	nodes []*Node
 }
 
-// TODO: implement this
-func (g *Graph) Export() error {
-	return nil
+func (g *Graph) AddNode(n *Node) {
+	g.nodes = append(g.nodes, n)
+}
+
+func (g *Graph) GetNodes() []*Node {
+	return g.nodes
 }

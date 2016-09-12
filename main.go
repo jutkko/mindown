@@ -27,8 +27,6 @@ func main() {
 			panic(err.Error())
 		}
 
-		err = graph.Export()
-
 		if err != nil {
 			panic(err.Error())
 		}

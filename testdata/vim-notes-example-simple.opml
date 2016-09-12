@@ -15,7 +15,8 @@
           </outline>
         </outline>
       </outline>
-      <outline text="Motion"><outline text="Basic"></outline>
+      <outline text="Motion">
+        <outline text="Basic"></outline>
         <outline text="Reference manual"></outline>
       </outline>
     </outline>
