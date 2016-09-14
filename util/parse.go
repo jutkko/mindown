@@ -21,6 +21,10 @@ func (n *Node) GetChildren() []*Node {
 	return n.children
 }
 
+func (n *Node) GetTitle() string {
+	return n.title
+}
+
 type Graph struct {
 	nodes []*Node
 }

@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("Parse", func() {
-	Describe("Node", func() {
+	Describe("Add and get nodes", func() {
 		var (
 			node1, node2, node3 *Node
 		)
@@ -32,6 +32,13 @@ var _ = Describe("Parse", func() {
 				node1Children := node1.GetChildren()
 				Expect(node1Children).Should(ConsistOf(node2, node3))
 			})
+		})
+	})
+
+	Describe("Get title", func() {
+		It("gets the corret title", func() {
+			node := NewNode("title", "value")
+			Expect(node.GetTitle()).To(Equal("title"))
 		})
 	})
 
