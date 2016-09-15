@@ -8,6 +8,8 @@ import (
 	"github.com/jutkko/mindown/util"
 )
 
+const DEPTH_LIMIT int = 6
+
 func WriteMarkdown(filename string, graph *util.Graph) error {
 	if graph == nil {
 		return errors.New("Graph is nil")
@@ -25,7 +27,7 @@ func WriteMarkdown(filename string, graph *util.Graph) error {
 }
 
 func writeMarkdownRecursively(depth int, filename string, node *util.Node) error {
-	err := appendToFile(fmt.Sprintf("%s %s\n", getHash(depth), node.GetTitle()), filename)
+	err := appendToFile(fmt.Sprintf("%s%s\n", getHash(depth), node.GetTitle()), filename)
 
 	if err != nil || len(node.GetChildren()) == 0 {
 		return err
@@ -43,8 +45,12 @@ func writeMarkdownRecursively(depth int, filename string, node *util.Node) error
 
 func getHash(level int) (result string) {
 	result = ""
-	for i := 0; i < level; i++ {
-		result += "#"
+
+	if level <= DEPTH_LIMIT {
+		for i := 0; i < level; i++ {
+			result += "#"
+		}
+		result += " "
 	}
 
 	return
