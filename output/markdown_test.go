@@ -23,7 +23,7 @@ var _ = Describe("Markdown", func() {
 		tempFile, err = ioutil.TempFile("", "")
 		Expect(err).NotTo(HaveOccurred())
 		filename = tempFile.Name()
-		content = make([]byte, 50)
+		content = make([]byte, 300)
 	})
 
 	It("should output the correct file given simple graph", func() {
@@ -45,6 +45,28 @@ var _ = Describe("Markdown", func() {
 		tempFile.Read(content)
 		Expect(content).Should(ContainSubstring("# Vim-notes\n"))
 		Expect(content).Should(ContainSubstring("# Vim-notes1\n"))
+
+		Expect(os.Remove(filename)).To(Succeed())
+	})
+
+	It("should output the correct file given a more complex graph", func() {
+		graph, err := input.ParseOpml("../testdata/vim-notes-example-simple.opml")
+		Expect(err).NotTo(HaveOccurred())
+
+		output.WriteMarkdown(filename, graph)
+		tempFile.Read(content)
+
+		Expect(content).Should(ContainSubstring("# Vim-notes\n"))
+		Expect(content).Should(ContainSubstring("## Intro\n"))
+		Expect(content).Should(ContainSubstring("### To vim\n"))
+		Expect(content).Should(ContainSubstring("### To reading the manual\n"))
+		Expect(content).Should(ContainSubstring("#### User manual\n"))
+		Expect(content).Should(ContainSubstring("#### How to use the manuals\n"))
+		Expect(content).Should(ContainSubstring("##### Navigate\n"))
+		Expect(content).Should(ContainSubstring("##### Search\n"))
+		Expect(content).Should(ContainSubstring("## Motion\n"))
+		Expect(content).Should(ContainSubstring("### Basic\n"))
+		Expect(content).Should(ContainSubstring("### Reference manual\n"))
 
 		Expect(os.Remove(filename)).To(Succeed())
 	})

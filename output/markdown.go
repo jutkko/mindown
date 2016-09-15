@@ -25,8 +25,10 @@ func WriteMarkdown(filename string, graph *util.Graph) error {
 }
 
 func writeMarkdownRecursively(depth int, filename string, node *util.Node) error {
-	if len(node.GetChildren()) == 0 {
-		return appendToFile(fmt.Sprintf("%s %s\n", getHash(depth), node.GetTitle()), filename)
+	err := appendToFile(fmt.Sprintf("%s %s\n", getHash(depth), node.GetTitle()), filename)
+
+	if err != nil || len(node.GetChildren()) == 0 {
+		return err
 	}
 
 	for _, node := range node.GetChildren() {
