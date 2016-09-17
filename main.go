@@ -24,6 +24,10 @@ func main() {
 			Value: "output.txt",
 			Usage: "output file name",
 		},
+		cli.BoolFlag{
+			Name:  "f",
+			Usage: "provide this flag to overwrite the output file if it exists",
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
@@ -31,12 +35,12 @@ func main() {
 		fmt.Printf("Input file name: %s\n", c.String("output-file"))
 		graph, err := input.ParseOpml(c.String("input-file"))
 		if err != nil {
-			panic(err.Error())
+			return err
 		}
 
-		err = output.WriteMarkdown(c.String("output-file"), graph)
+		err = output.WriteMarkdown(c.String("output-file"), c.Bool("f"), graph)
 		if err != nil {
-			panic(err.Error())
+			return err
 		}
 
 		return nil
