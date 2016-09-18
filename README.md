@@ -5,7 +5,8 @@
 
 ## What is it?
 mindown is the tool that maps what is in your mind to files! It is simple to
-use and easy to extend for your needs!
+use and easy to extend for your needs! OK, what it really does is converting
+mindmaps to files and files to mindmaps. In a pretty extensible fashion.
 
 ## How to use it?
 It is both an app and a library. Follow the instructions below to get your
@@ -33,21 +34,18 @@ to export them to various formats. The other direction of this can be to
 mindmaps, so we can visualise different formatted documents. It can be the
 table of contents of an article, a book or whatever you can think of.
 
-To add a new type of input/output for mindown, it's possible to only implement
+To add a new type of **input**/**output** for mindown, it's possible to only implement
 one direction: i.e., you don't have add them in pairs. This is achieved by
 providing a centric interface [graph](https:github.com/jutkko/mindown/utils/parse.go).
 
-Right now we only support the following format(s) to input:
+Right now we only support the following format(s) to **input**:
 
 - [OPML](http://dev.opml.org/)
 
-And for output:
+And for **output**:
 
 - GitHub style [markdown](http://daringfireball.net/projects/markdown/)
 
-### Input
-
-### Output
 ## Todo
 I use [Mindnote](https://mindnode.com/) for visualising the mindmaps. There are
 a few things I'd like to be included in the graph interface.
