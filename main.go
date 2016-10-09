@@ -31,9 +31,6 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
-		fmt.Printf("Input file name: %s\n", c.String("input-file"))
-		fmt.Printf("Input file name: %s\n", c.String("output-file"))
-		graph, err := input.ParseOpml(c.String("input-file"))
 		if err != nil {
 			return err
 		}
