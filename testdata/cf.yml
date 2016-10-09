@@ -1,0 +1,319 @@
+---
+name: cf
+director_uuid: some-id
+
+releases:
+- {name: cf, version: 238}
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: false
+  canary_watch_time: 30000-600000
+  update_watch_time: 5000-600000
+
+instance_groups:
+- name: nats_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: nats, release: cf}
+  - {name: nats_stream_forwarder, release: cf}
+  - {name: metron_agent, release: cf}
+  networks:
+  - name: cf_private
+    static_ips: [10.0.1.109]
+
+- name: etcd_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  persistent_disk_type: 50GB
+  jobs:
+  - {name: etcd, release: cf}
+  - {name: etcd_metrics_server, release: cf}
+  - {name: metron_agent, release: cf}
+  networks:
+  - name: cf_private
+    static_ips: [10.0.1.110]
+  properties:
+    etcd_metrics_server:
+      nats:
+        machines: [10.0.1.109]
+        password: password
+        username: username
+
+- name: consul_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  persistent_disk_type: 1GB
+  jobs:
+  - {name: metron_agent, release: cf}
+  - {name: consul_agent, release: cf}
+  networks:
+  - name: cf_private
+    static_ips: [10.0.1.111]
+  properties:
+    consul:
+      agent:
+        mode: server
+
+- name: blobstore_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  persistent_disk_type: 10GB
+  jobs:
+  - {name: blobstore, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: route_registrar, release: cf}
+  - {name: consul_agent, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    consul:
+      agent:
+        services:
+          blobstore: {}
+    route_registrar:
+      routes:
+      - name: blobstore
+        port: 80
+        registration_interval: 20s
+        tags:
+          component: blobstore
+        uris:
+        - "blobstore.dummy.cf.org"
+
+- name: postgres_z1
+  instances: 1
+  stemcell: trusty
+  azs: [eu-west-1a]
+  persistent_disk_type: 50GB
+  vm_type: m3.medium
+  templates:
+  - {name: postgres, release: cf}
+  - {name: metron_agent, release: cf}
+  networks:
+  - name: cf_private
+    static_ips: [10.0.1.107]
+  update:
+    serial: true
+
+- name: api_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: cloud_controller_ng, release: cf}
+  - {name: cloud_controller_worker, release: cf}
+  - {name: cloud_controller_clock, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: route_registrar, release: cf}
+  - {name: consul_agent, release: cf}
+  - {name: go-buildpack, release: cf}
+  - {name: binary-buildpack, release: cf}
+  - {name: nodejs-buildpack, release: cf}
+  - {name: ruby-buildpack, release: cf}
+  - {name: php-buildpack, release: cf}
+  - {name: python-buildpack, release: cf}
+  - {name: staticfile-buildpack, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    consul:
+      agent:
+        services:
+          cloud_controller_ng: {}
+    route_registrar:
+      routes:
+      - name: api
+        registration_interval: 20s
+        port: 9022
+        uris:
+        - "api.dummy.cf.org"
+
+- name: ha_proxy_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: haproxy, release: cf}
+  - {name: metron_agent, release: cf}
+  networks:
+  - name: elastic
+    static_ips: [52.208.176.1]
+  - name: cf_public
+    default: [gateway, dns]
+  properties:
+    ha_proxy:
+      ssl_pem: |
+        -----BEGIN CERTIFICATE-----
+        -----END CERTIFICATE-----
+        -----BEGIN RSA PRIVATE KEY-----
+        -----END RSA PRIVATE KEY-----
+    router:
+      servers:
+        - 10.0.1.108
+
+- name: hm9000_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: consul_agent, release: cf}
+  - {name: hm9000, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: route_registrar, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    consul:
+      agent:
+        services:
+          hm9000: {}
+    route_registrar:
+      routes:
+      - name: hm9000
+        registration_interval: 20s
+        port: 5155
+        uris:
+        - "hm9000.dummy.cf.org"
+
+- name: doppler_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  templates:
+  - {name: doppler, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    doppler: {zone: z1}
+    doppler_endpoint:
+      shared_secret: password
+
+- name: loggregator_trafficcontroller_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  templates:
+  - {name: loggregator_trafficcontroller, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: route_registrar, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    traffic_controller: {zone: z1}
+    route_registrar:
+      routes:
+      - name: doppler
+        port: 8081
+        registration_interval: 20s
+        uris:
+        - "doppler.dummy.cf.org"
+      - name: loggregator
+        port: 8080
+        registration_interval: 20s
+        uris:
+          - "loggregator.dummy.cf.org"
+
+- name: uaa_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  templates:
+  - {name: uaa, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: route_registrar, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    login:
+      catalina_opts: -Xmx768m -XX:MaxPermSize=256m
+    route_registrar:
+      routes:
+      - name: uaa
+        port: 8080
+        registration_interval: 20s
+        uris:
+        - "uaa.dummy.cf.org"
+        - "*.uaa.dummy.cf.org"
+        - "login.dummy.cf.org"
+        - "*.login.dummy.cf.org"
+    uaa:
+      admin:
+        client_secret: password
+      batch:
+        password: password
+        username: batch_user
+      cc:
+        client_secret: password
+      scim:
+        userids_enabled: true
+        users:
+        - admin|password|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose,routing.router_groups.read
+    uaadb:
+      address: 10.0.1.107
+      databases:
+      - {name: uaadb, tag: uaa}
+      db_scheme: postgresql
+      port: 5524
+      roles:
+      - {name: uaaadmin, password: password, tag: admin}
+
+- name: router_z1
+  instances: 1
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: gorouter, release: cf}
+  - {name: metron_agent, release: cf}
+  - {name: consul_agent, release: cf}
+  networks:
+  - name: cf_private
+    static_ips: [10.0.1.108]
+  properties:
+    dropsonde: {enabled: true}
+
+- name: runner_z1
+  instances: 2
+  vm_type: m3.medium
+  stemcell: trusty
+  azs: [eu-west-1a]
+  jobs:
+  - {name: consul_agent, release: cf}
+  - {name: dea_next, release: cf}
+  - {name: dea_logging_agent, release: cf}
+  - {name: metron_agent, release: cf}
+  networks:
+  - name: cf_private
+  properties:
+    consul:
+      agent:
+        services:
+          dea:
+            check:
+              name: dns_health_check
+              script: /var/vcap/jobs/dea_next/bin/dns_health_check
+              interval: 5m
+              status: passing
+    dea_next: {zone: z1}
