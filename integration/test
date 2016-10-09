@@ -1,0 +1,13 @@
+#!/bin/bash -ex
+
+go build main.go
+
+# simply run the command to see if it succeeds
+./main --input-file testdata/simple.opml --output-file test.md
+rm test.md
+./main --input-format yml --input-file testdata/simple.yml --output-file test.md
+rm test.md
+./main --input-format opml --input-file testdata/simple.opml --output-file test.md
+rm test.md
+
+rm main
