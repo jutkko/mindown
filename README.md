@@ -41,6 +41,7 @@ providing a centric interface [graph](https:github.com/jutkko/mindown/utils/pars
 Right now we only support the following format(s) to **input**:
 
 - [OPML](http://dev.opml.org/)
+- BOSH [manifest](https://bosh.io/docs/manifest-v2.html)
 
 And for **output**:
 
